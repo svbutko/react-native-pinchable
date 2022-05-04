@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) CGFloat minimumZoomScale;
 @property (nonatomic) CGFloat maximumZoomScale;
+@property (nonatomic) RCTBubblingEventBlock onGestureBegan;
+@property (nonatomic) RCTBubblingEventBlock onGestureEnded;
 
 @end
 

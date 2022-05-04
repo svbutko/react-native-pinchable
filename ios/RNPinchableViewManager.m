@@ -20,5 +20,7 @@ RCT_EXPORT_MODULE(PinchableView)
 
 RCT_EXPORT_VIEW_PROPERTY(minimumZoomScale, CGFloat);
 RCT_EXPORT_VIEW_PROPERTY(maximumZoomScale, CGFloat);
+RCT_EXPORT_VIEW_PROPERTY(onGestureBegan, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onGestureEnded, RCTBubblingEventBlock);
 
 @end

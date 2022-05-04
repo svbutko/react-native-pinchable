@@ -16,7 +16,6 @@ UIView *initialSuperView;
 NSUInteger initialIndex;
 CGRect initialFrame;
 CGPoint initialTouchPoint;
-CGPoint initialAnchorPoint;
 CGPoint lastTouchPoint;
 UIView *backgroundView;
 
@@ -39,7 +38,6 @@ UIView *backgroundView;
   initialIndex = -1;
   initialFrame = CGRectZero;
   initialTouchPoint = CGPointZero;
-  initialAnchorPoint = CGPointZero;
   lastTouchPoint = CGPointZero;
   backgroundView = nil;
 }
@@ -76,8 +74,7 @@ UIView *backgroundView;
     isActive = YES;
     initialSuperView = view.superview;
     initialIndex = [initialSuperView.subviews indexOfObject:view];
-    initialAnchorPoint = view.layer.anchorPoint;
-    
+
     CGPoint center = [gestureRecognizer locationInView:view];
     CGPoint absoluteOrigin = [view.superview convertPoint:view.frame.origin toView:window];
     CGPoint anchorPoint = CGPointMake(center.x/initialFrame.size.width, center.y/initialFrame.size.height);
@@ -87,19 +84,20 @@ UIView *backgroundView;
     backgroundView.frame = window.frame;
     [window addSubview:backgroundView];
     [window addSubview:view];
-    
+
     view.layer.anchorPoint = anchorPoint;
     view.center = center;
     view.frame = CGRectMake(absoluteOrigin.x, absoluteOrigin.y, initialFrame.size.width, initialFrame.size.height);
     [initialSuperView setNeedsLayout];
     [view setNeedsLayout];
+      self.onGestureBegan(@{});
   }
-  
+
   if (gestureRecognizer.state == UIGestureRecognizerStateBegan ||
       gestureRecognizer.state == UIGestureRecognizerStateChanged) {
-    
+
     CGPoint currentTouchPoint = [gestureRecognizer locationInView:window];
-    
+
     if (lastNumberOfTouches != gestureRecognizer.numberOfTouches) {
       lastNumberOfTouches = gestureRecognizer.numberOfTouches;
       CGFloat deltaX = currentTouchPoint.x - lastTouchPoint.x;
@@ -114,7 +112,7 @@ UIView *backgroundView;
     transform = CGAffineTransformTranslate(transform, translate.x, translate.y);
     transform = CGAffineTransformScale(transform, scale, scale);
     view.transform = transform;
-    
+
     backgroundView.layer.opacity = MIN(scale - 1., .7);
     lastTouchPoint = currentTouchPoint;
   }
@@ -127,9 +125,9 @@ UIView *backgroundView;
     } completion:^(BOOL finished) {
       [backgroundView removeFromSuperview];
       [initialSuperView insertSubview:view atIndex:initialIndex];
-      view.layer.anchorPoint = initialAnchorPoint;
       view.frame = initialFrame;
       [self resetGestureState];
+      self.onGestureEnded(@{});
     }];
   }
 }

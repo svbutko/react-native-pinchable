@@ -42,10 +42,12 @@ import Pinchable from 'react-native-pinchable';
 
 ### Properties
 
-| Prop                   | Description                     | Default |
-| ---------------------- | ------------------------------- | ------- |
-| **`minimumZoomScale`** | The minimum allowed zoom scale. | `1`     |
-| **`maximumZoomScale`** | The maximum allowed zoom scale. | `3`     |
+| Prop                   | Description                     | Default     |
+|------------------------|---------------------------------|-------------|
+| **`minimumZoomScale`** | The minimum allowed zoom scale. | `1`         |
+| **`maximumZoomScale`** | The maximum allowed zoom scale. | `3`         |
+| **`onGestureBegan`**   | On gesture began callback.      | `undefined` |
+| **`onGestureEnded`**   | On gesture ended callback.      | `undefined` |
 
 ## Limitations
 
