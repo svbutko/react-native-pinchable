@@ -1,22 +1,22 @@
 package com.oblador.pinchable;
 
-import java.lang.Math;
-
-import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.Color;
-import android.graphics.PointF;
-import android.graphics.Bitmap;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PointF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.animation.DecelerateInterpolator;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.facebook.react.views.view.ReactViewGroup;
 
 public class PinchableView extends ReactViewGroup implements OnTouchListener {
@@ -33,12 +33,14 @@ public class PinchableView extends ReactViewGroup implements OnTouchListener {
     private ValueAnimator currentAnimator = null;
     private ColorDrawable backdrop = null;
     private BitmapDrawable clone = null;
+    private static final String PROP_ON_GESTURE_BEGAN = "onGestureBegan";
+    private static final String PROP_ON_GESTURE_ENDED = "onGestureEnded";
 
     public PinchableView(Context context) {
         super(context);
         this.setOnTouchListener(this);
     }
-    
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         // Block touch events on children
@@ -122,6 +124,7 @@ public class PinchableView extends ReactViewGroup implements OnTouchListener {
         }
 
         active = true;
+        sendNativeEvent(PROP_ON_GESTURE_BEGAN);
 
         if (backdrop == null) {
             backdrop = new ColorDrawable(Color.BLACK);
@@ -155,6 +158,7 @@ public class PinchableView extends ReactViewGroup implements OnTouchListener {
 
     private void endGesture(MotionEvent event) {
         active = false;
+        sendNativeEvent(PROP_ON_GESTURE_ENDED);
         this.getParent().requestDisallowInterceptTouchEvent(false);
         if (currentAnimator != null) {
             currentAnimator.cancel();
@@ -203,5 +207,10 @@ public class PinchableView extends ReactViewGroup implements OnTouchListener {
 
     public void setMaximumZoomScale(float maximumZoomScale) {
         maxScale = maximumZoomScale;
+    }
+
+    private void sendNativeEvent(final String eventName) {
+        ReactContext context = (ReactContext)getContext();
+        context.getJSModule(RCTEventEmitter.class).receiveEvent(getId(), eventName, Arguments.createMap());
     }
 }
