@@ -49,8 +49,8 @@ public class PinchableViewManager extends ViewGroupManager<PinchableView> {
     @Override
     public Map<String, Object> getExportedCustomBubblingEventTypeConstants() {
         return MapBuilder.<String, Object>builder()
-                .put(PROP_ON_GESTURE_BEGAN, MapBuilder.of("bubbled", PROP_ON_GESTURE_BEGAN))
-                .put(PROP_ON_GESTURE_ENDED, MapBuilder.of("bubbled", PROP_ON_GESTURE_ENDED))
+                .put(PROP_ON_GESTURE_BEGAN, MapBuilder.of("registrationName", PROP_ON_GESTURE_BEGAN))
+                .put(PROP_ON_GESTURE_ENDED, MapBuilder.of("registrationName", PROP_ON_GESTURE_ENDED))
                 .build();
     }
 }
